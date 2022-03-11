@@ -45,22 +45,24 @@ fun Greeting(name: String) {
 
 @Composable
 fun DisplayScreenContent() {
+    var countState by remember {
+        mutableStateOf(0)
+    }
+
     Column {
         Greeting(name = "Android")
         Divider()
         Greeting(name = "Telematics")
-        counter()
+        Counter(count = countState, updateCount = { newCount ->
+            countState = newCount
+        })
+        if (countState > 5) Text(text = "Too many clicks")
     }
 }
 
 @Composable
-fun counter() {
-    var count by remember {
-        mutableStateOf(0)
-    }
-    Button(onClick = {
-        count++
-    }) {
+fun Counter(count: Int, updateCount: (Int) -> Unit) {
+    Button(onClick = { updateCount(count + 1) }) {
         Text(text = "clicks: $count")
     }
 }
