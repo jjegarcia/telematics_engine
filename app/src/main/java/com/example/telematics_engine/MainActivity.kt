@@ -47,16 +47,15 @@ fun Greeting(name: String) {
 
 @Composable
 fun DisplayScreenContent(
-    names: List<String> = listOf<String>("Android", "Telematics")
+    names: List<String> = List(15){ itemNo ->
+        "Hello Android: $itemNo"}
 ) {
     var countState by remember {
         mutableStateOf(0)
     }
 
     Column(modifier = Modifier.fillMaxHeight()) {
-        Column(modifier = Modifier.weight(1f)) {
-            NameList(names)
-        }
+        NameList(names = names, modifier = Modifier.weight(1f))
         Counter(count = countState, updateCount = { newCount ->
             countState = newCount
         })
@@ -65,10 +64,12 @@ fun DisplayScreenContent(
 }
 
 @Composable
-private fun NameList(names: List<String>) {
-    for (name in names) {
-        Greeting(name = name)
-        Divider()
+private fun NameList(names: List<String>, modifier: Modifier) {
+    Column(modifier = modifier) {
+        for (name in names) {
+            Greeting(name = name)
+            Divider()
+        }
     }
 }
 
