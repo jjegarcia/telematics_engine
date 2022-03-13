@@ -26,13 +26,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp() {
 
-//    var shouldShowOnboarding by remember { mutableStateOf(true) }
-    var shouldShowOnboarding= remember {
-        mutableStateOf(true)
-    }
+    var shouldShowOnboarding by remember { mutableStateOf(true) }
 
-    if (shouldShowOnboarding.value) {
-        OnboardingScreen(onContinueClicked = { shouldShowOnboarding.value = false })
+    if (shouldShowOnboarding) {
+        OnboardingScreen(onContinueClicked = { shouldShowOnboarding = false })
     } else {
         Greetings()
     }
