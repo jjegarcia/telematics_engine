@@ -4,10 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.telematics_engine.ui.theme.Telematics_engineTheme
@@ -25,14 +27,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyApp() {
-
-    var shouldShowOnboarding by remember { mutableStateOf(true) }
-
-    if (shouldShowOnboarding) {
-        OnboardingScreen(onContinueClicked = { shouldShowOnboarding = false })
-    } else {
-        Greetings()
-    }
+    StartApp(accelerometers = listOf("X", "Y", "Z"))
 }
 
 @Composable
@@ -56,45 +51,40 @@ fun OnboardingScreen(onContinueClicked: () -> Unit) {
 }
 
 @Composable
-private fun Greetings(names: List<String> = listOf("World", "Compose")) {
+private fun StartApp(accelerometers: List<String>) {
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
-        for (name in names) {
-            Greeting(name = name)
+        for (name in accelerometers) {
+            Card(accelerometer = name)
         }
     }
 }
 
-@Preview(showBackground = true, widthDp = 320, heightDp = 320)
 @Composable
-fun OnboardingPreview() {
-    Telematics_engineTheme {
-        OnboardingScreen(onContinueClicked = {})
-    }
-}
-
-@Composable
-private fun Greeting(name: String) {
-
-    val expanded = remember { mutableStateOf(false) }
-
-    val extraPadding = if (expanded.value) 48.dp else 0.dp
+private fun Card(accelerometer: String) {
 
     Surface(
         color = MaterialTheme.colors.primary,
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
         Row(modifier = Modifier.padding(24.dp)) {
-            Column(modifier = Modifier
-                .weight(1f)
-                .padding(bottom = extraPadding)
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(bottom = 0.dp)
             ) {
-                Text(text = "Hello, ")
-                Text(text = name)
+                var accelerometerText by remember {
+                    mutableStateOf("")
+                }
+                TextField(value = accelerometerText,
+                    onValueChange = { accelerometerText = it },
+                    label = { Text(text = accelerometer) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
             }
             OutlinedButton(
-                onClick = { expanded.value = !expanded.value }
+                onClick = {  }
             ) {
-                Text(if (expanded.value) "Show less" else "Show more")
+                Text("Send")
             }
         }
     }
@@ -104,6 +94,6 @@ private fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     Telematics_engineTheme {
-        Greetings()
+        StartApp(accelerometers = listOf("X", "Y", "Z"))
     }
 }
