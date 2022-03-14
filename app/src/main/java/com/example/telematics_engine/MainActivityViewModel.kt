@@ -1,5 +1,6 @@
 package com.example.telematics_engine
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -55,21 +56,25 @@ class MainActivityViewModel constructor(val dbHandler: DbHandler) : ViewModel() 
                 }
                 OutlinedButton(
                     onClick = {
-                        var numeric = true
-                        var num = 0
-                        if (!accelerometerValue.isBlank())
-                            try {
-                                num = accelerometerValue.toInt()
-                            } catch (e: NumberFormatException) {
-                                numeric = false
-                            }
-                        if (numeric) dbHandler.write(path, num)
+                         val num: Int? = validateNumber(accelerometerValue)
+                        if (num !=null) dbHandler.write(path, num)
                     }
                 ) {
                     Text("Send")
                 }
             }
         }
+    }
+
+    private fun validateNumber(accelerometerValue: String): Int? {
+        var num: Int? = null
+        if (!accelerometerValue.isBlank())
+            try {
+                num = accelerometerValue.toInt()
+            } catch (e: NumberFormatException) {
+                Log.w("Message", "Invalid Number")
+            }
+        return num
     }
 
     //    @Preview(showBackground = true, widthDp = 320)
