@@ -17,17 +17,19 @@ import com.example.telematics_engine.ui.theme.Telematics_engineTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val dbHandler = DbHandler()
+
         setContent {
             Telematics_engineTheme {
-                MyApp()
+                MyApp(dbHandler)
             }
         }
     }
 }
 
 @Composable
-fun MyApp() {
-    StartApp(accelerometers = listOf("X", "Y", "Z"))
+fun MyApp(dbHandler: DbHandler) {
+    Cards(dbHandler, accelerometers = listOf("X", "Y", "Z"))
 }
 
 @Composable
@@ -51,17 +53,20 @@ fun OnboardingScreen(onContinueClicked: () -> Unit) {
 }
 
 @Composable
-private fun StartApp(accelerometers: List<String>) {
+private fun Cards(dbHandler: DbHandler, accelerometers: List<String>) {
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
         for (name in accelerometers) {
-            Card(accelerometer = name)
+            Card(dbHandler, path = name)
         }
     }
 }
 
 @Composable
-private fun Card(accelerometer: String) {
+private fun Card(dbHandler: DbHandler, path: String) {
 
+    var accelerometerValue by remember {
+        mutableStateOf("")
+    }
     Surface(
         color = MaterialTheme.colors.primary,
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
@@ -72,17 +77,15 @@ private fun Card(accelerometer: String) {
                     .weight(1f)
                     .padding(bottom = 0.dp)
             ) {
-                var accelerometerText by remember {
-                    mutableStateOf("")
-                }
-                TextField(value = accelerometerText,
-                    onValueChange = { accelerometerText = it },
-                    label = { Text(text = accelerometer) },
+                TextField(
+                    value = accelerometerValue,
+                    onValueChange = { accelerometerValue = it },
+                    label = { Text(text = path) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
             }
             OutlinedButton(
-                onClick = {  }
+                onClick = { dbHandler.write(path, accelerometerValue) }
             ) {
                 Text("Send")
             }
@@ -94,6 +97,6 @@ private fun Card(accelerometer: String) {
 @Composable
 fun DefaultPreview() {
     Telematics_engineTheme {
-        StartApp(accelerometers = listOf("X", "Y", "Z"))
+//        Cards(dbHandler = dbHandler, accelerometers = listOf("X", "Y", "Z"))
     }
 }
