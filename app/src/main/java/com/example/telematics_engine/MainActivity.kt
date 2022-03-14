@@ -39,6 +39,9 @@ private fun Cards(dbHandler: DbHandler, accelerometers: List<String>) {
         for (name in accelerometers) {
             Card(dbHandler, path = name)
         }
+        val accelerometers = dbHandler.accelerometers.collectAsState(initial = 0)
+        val xyz by remember { accelerometers }
+        Text(xyz.toString())
     }
 }
 
@@ -68,14 +71,14 @@ private fun Card(dbHandler: DbHandler, path: String) {
             OutlinedButton(
                 onClick = {
                     var numeric = true
-                    var num=0
+                    var num = 0
                     if (!accelerometerValue.isBlank())
                         try {
                             num = accelerometerValue.toInt()
                         } catch (e: NumberFormatException) {
                             numeric = false
                         }
-                   if (numeric) dbHandler.write(path, num)
+                    if (numeric) dbHandler.write(path, num)
                 }
             ) {
                 Text("Send")
