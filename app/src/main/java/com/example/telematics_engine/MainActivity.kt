@@ -35,26 +35,6 @@ fun MyApp(dbHandler: DbHandler) {
 }
 
 @Composable
-fun OnboardingScreen(onContinueClicked: () -> Unit) {
-
-    Surface {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text("Welcome to the Basics Codelab!")
-            Button(
-                modifier = Modifier.padding(vertical = 24.dp),
-                onClick = onContinueClicked
-            ) {
-                Text("Continue")
-            }
-        }
-    }
-}
-
-@Composable
 private fun Cards(dbHandler: DbHandler, accelerometers: List<String>) {
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
         for (name in accelerometers) {
