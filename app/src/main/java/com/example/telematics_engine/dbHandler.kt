@@ -6,7 +6,6 @@ import com.google.firebase.database.*
 class DbHandler() {
     val myRef: DatabaseReference by lazy { FirebaseDatabase.getInstance().getReference("test") }
 
-
     fun read(path: String) {
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -19,7 +18,7 @@ class DbHandler() {
         })
     }
 
-    fun write(path: String, value: Any?) {
+    fun write(path: String, value: Int) {
         myRef.child(path).setValue(value)
     }
 }

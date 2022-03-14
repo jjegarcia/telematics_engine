@@ -3,11 +3,12 @@ package com.example.telematics_engine
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -67,7 +68,7 @@ private fun Card(dbHandler: DbHandler, path: String) {
                 )
             }
             OutlinedButton(
-                onClick = { dbHandler.write(path, accelerometerValue) }
+                onClick = { dbHandler.write(path, accelerometerValue.toInt()) }
             ) {
                 Text("Send")
             }
