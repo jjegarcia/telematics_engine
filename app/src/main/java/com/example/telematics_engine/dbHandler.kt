@@ -13,10 +13,9 @@ class DbHandler() {
     val accelerometers: LiveData<Accelerometers> = _accelerometers
 
 
-    fun read(path: String) {
+    fun read() {
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                 Log.w("DB read- $path", snapshot.child(path).getValue().toString())
                 Log.w("Acc:",snapshot.getValue<Accelerometers>().toString())
                 //_accelerometers.postValue(snapshot.getValue<Accelerometers>())
             }
@@ -28,6 +27,6 @@ class DbHandler() {
     }
 
     fun write(path: String, value: Int) {
-        myRef.child(path).setValue(value)
+        if(value in 0..1000) myRef.child(path).setValue(value)
     }
 }

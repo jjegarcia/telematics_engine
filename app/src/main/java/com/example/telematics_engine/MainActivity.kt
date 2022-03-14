@@ -19,9 +19,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dbHandler = DbHandler()
-        dbHandler.read("x")
-        dbHandler.read("y")
-        dbHandler.read("z")
+        dbHandler.read()
         setContent {
             Telematics_engineTheme {
                 MyApp(dbHandler)
@@ -68,7 +66,17 @@ private fun Card(dbHandler: DbHandler, path: String) {
                 )
             }
             OutlinedButton(
-                onClick = { dbHandler.write(path, accelerometerValue.toInt()) }
+                onClick = {
+                    var numeric = true
+                    var num=0
+                    if (!accelerometerValue.isBlank())
+                        try {
+                            num = accelerometerValue.toInt()
+                        } catch (e: NumberFormatException) {
+                            numeric = false
+                        }
+                   if (numeric) dbHandler.write(path, num)
+                }
             ) {
                 Text("Send")
             }
