@@ -19,9 +19,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dbHandler = DbHandler()
-        dbHandler.read("X")
-        dbHandler.read("Y")
-        dbHandler.read("Z")
+        dbHandler.read("x")
+        dbHandler.read("y")
+        dbHandler.read("z")
         setContent {
             Telematics_engineTheme {
                 MyApp(dbHandler)
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyApp(dbHandler: DbHandler) {
-    Cards(dbHandler, accelerometers = listOf("X", "Y", "Z"))
+    Cards(dbHandler, accelerometers = listOf("x", "y", "z"))
 }
 
 @Composable
