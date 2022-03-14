@@ -18,7 +18,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dbHandler = DbHandler()
-
+        dbHandler.read("X")
+        dbHandler.read("Y")
+        dbHandler.read("Z")
         setContent {
             Telematics_engineTheme {
                 MyApp(dbHandler)
