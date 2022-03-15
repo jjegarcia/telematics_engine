@@ -17,12 +17,14 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlin.math.atan2
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 @Composable
 fun PieChart(
@@ -102,16 +104,15 @@ fun PieChart(
                     isDonut = isDonut,
                     true
                 )
-            }
 
-//            if (activePie != -1)
+
                 drawContext.canvas.nativeCanvas.apply {
                     val fontSize = 60.toDp().toPx()
                     drawText(
-                        "${proportions[activePie].roundToInt()}%",
+                        "${50f.roundToInt()}%",
                         (sideSize / 2) + fontSize / 4, (sideSize / 2) + fontSize / 3,
                         Paint().apply {
-                            color = percentColor.toArgb()
+//                            color = percentColor
                             textSize = fontSize
                             textAlign = Paint.Align.CENTER
                         }

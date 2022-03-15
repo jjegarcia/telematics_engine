@@ -178,16 +178,16 @@ private fun convertTouchEventPointToAngle(
     return angle
 }
 
-@Preview
-@Composable
-fun ChartPreview() {
-    PieChart(
-        modifier = Modifier,
-        progress = listOf(10f, 20f, 5f),
-        colors = listOf(
-            Color(0xFFbf95d4),
-            Color(0xFFf4ac1a),
-            Color(0xFF8b0a50),
-        )
-    )
-}
+//@Preview
+//@Composable
+//fun ChartPreview() {
+//    PieChart(
+//        modifier = Modifier,
+//        progress = listOf(10f, 20f, 5f),
+//        colors = listOf(
+//            Color(0xFFbf95d4),
+//            Color(0xFFf4ac1a),
+//            Color(0xFF8b0a50),
+//        )
+//    )
+//}
