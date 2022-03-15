@@ -26,10 +26,10 @@ class MainActivityViewModel constructor(val dbHandler: DbHandler) : ViewModel() 
             for (name in accelerometers) {
                 Card(dbHandler, path = name)
             }
-            val accelerometers = dbHandler.accelerometers.collectAsState(initial = 0)
+            val accelerometers = dbHandler.accelerometers.collectAsState(initial = Accelerometers(0,0,0))
             val xyz by remember { accelerometers }
             Row() {
-                donut.PieChart(modifier = Modifier, progressV = xyz , color = Color(0xFFbf95d4))
+                donut.PieChart(modifier = Modifier, progressV = xyz.x , color = Color(0xFFbf95d4))
             }
         }
     }
