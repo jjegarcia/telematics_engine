@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,27 +28,13 @@ import kotlin.math.roundToInt
 @Composable
 fun PieChart(
     modifier: Modifier,
-    progress: Float,
+    progressV: Int,
     color: Color,
     isDonut: Boolean = true,
-    percentColor: Color = Color.White
+//    percentColor: Color = Color.White
+    maxProgress: Float = 1000f
 ) {
-
-//    if (progress.isEmpty() || progress.size != colors.size) return
-
-//    val total = progress.sum()
-//    val proportions = progress.map {
-//        it * 100 / total
-//    }
-//    val angleProgress = proportions.map {
-//        360 * it / 100
-//    }
-
-//    val progressSize = mutableListOf<Float>()
-//    progressSize.add(angleProgress.first())
-//
-//    for (x in 1 until angleProgress.size)
-//        progressSize.add(angleProgress[x] + progressSize[x - 1])
+    val progress:Float=progressV.toFloat()/maxProgress
 
     var activePie by remember {
         mutableStateOf(-1)
@@ -95,29 +80,29 @@ fun PieChart(
                 }
         ) {
 
-                drawPie(
-                    color,
-                    startAngle,
-                    180f,
-                    size,
-                    padding = padding,
-                    isDonut = isDonut,
-                    true
-                )
+            drawPie(
+                color = color,
+                startAngle = startAngle,
+                arcProgress = progress * 360f,
+                size = size,
+                padding = padding,
+                isDonut = isDonut,
+                isActive = true
+            )
 
 
-                drawContext.canvas.nativeCanvas.apply {
-                    val fontSize = 60.toDp().toPx()
-                    drawText(
-                        "${50f.roundToInt()}%",
-                        (sideSize / 2) + fontSize / 4, (sideSize / 2) + fontSize / 3,
-                        Paint().apply {
+            drawContext.canvas.nativeCanvas.apply {
+                val fontSize = 60.toDp().toPx()
+                drawText(
+                    "${progress * 100f.roundToInt()}%",
+                    (sideSize / 2) + fontSize / 4, (sideSize / 2) + fontSize / 3,
+                    Paint().apply {
 //                            color = percentColor
-                            textSize = fontSize
-                            textAlign = Paint.Align.CENTER
-                        }
-                    )
-                }
+                        textSize = fontSize
+                        textAlign = Paint.Align.CENTER
+                    }
+                )
+            }
         }
     }
 
@@ -168,7 +153,7 @@ private fun convertTouchEventPointToAngle(
 fun ChartPreview() {
     PieChart(
         modifier = Modifier,
-        progress = 10f,
+        progressV = 500,
         color = Color(0xFFbf95d4)
-        )
+    )
 }
