@@ -17,37 +17,44 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlin.math.atan2
 import kotlin.math.min
+import kotlin.math.roundToInt
+
+/**
+ * Created by Ankit Dubey on 03,September,2021
+ */
 
 @Composable
 fun PieChart(
     modifier: Modifier,
-    progress: Float,
-    color: Color,
-    isDonut: Boolean = true,
+    progress: List<Float>,
+    colors: List<Color>,
+    isDonut: Boolean = false,
     percentColor: Color = Color.White
 ) {
 
-//    if (progress.isEmpty() || progress.size != colors.size) return
+    if (progress.isEmpty() || progress.size != colors.size) return
 
-//    val total = progress.sum()
-//    val proportions = progress.map {
-//        it * 100 / total
-//    }
-//    val angleProgress = proportions.map {
-//        360 * it / 100
-//    }
+    val total = progress.sum()
+    val proportions = progress.map {
+        it * 100 / total
+    }
+    val angleProgress = proportions.map {
+        360 * it / 100
+    }
 
-//    val progressSize = mutableListOf<Float>()
-//    progressSize.add(angleProgress.first())
-//
-//    for (x in 1 until angleProgress.size)
-//        progressSize.add(angleProgress[x] + progressSize[x - 1])
+    val progressSize = mutableListOf<Float>()
+    progressSize.add(angleProgress.first())
+
+    for (x in 1 until angleProgress.size)
+        progressSize.add(angleProgress[x] + progressSize[x - 1])
 
     var activePie by remember {
         mutableStateOf(-1)
@@ -88,23 +95,32 @@ fun PieChart(
                             it.x,
                             it.y
                         )
-                        return@detectTapGestures
+                        progressSize.forEachIndexed { index, item ->
+                            if (clickedAngle <= item) {
+                                if (activePie != index)
+                                    activePie = index
+
+                                return@detectTapGestures
+                            }
+                        }
                     }
                 }
         ) {
 
+            angleProgress.forEachIndexed { index, arcProgress ->
                 drawPie(
-                    color,
+                    colors[index],
                     startAngle,
-                    180f,
+                    arcProgress * pathPortion.value,
                     size,
                     padding = padding,
                     isDonut = isDonut,
-                    true
+                    isActive = activePie == index
                 )
+                startAngle += arcProgress
             }
 
-//            if (activePie != -1)
+            if (activePie != -1)
                 drawContext.canvas.nativeCanvas.apply {
                     val fontSize = 60.toDp().toPx()
                     drawText(
@@ -167,7 +183,11 @@ private fun convertTouchEventPointToAngle(
 fun ChartPreview() {
     PieChart(
         modifier = Modifier,
-        progress = 10f,
-        color = Color(0xFFbf95d4)
+        progress = listOf(10f, 20f, 5f),
+        colors = listOf(
+            Color(0xFFbf95d4),
+            Color(0xFFf4ac1a),
+            Color(0xFF8b0a50),
         )
+    )
 }
