@@ -8,12 +8,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import com.example.telematics_engine.ui.theme.Telematics_engineTheme
 
 class MainActivityViewModel constructor(val dbHandler: DbHandler) : ViewModel() {
+    val donut=Donut()
     @Composable
     fun MyApp() {
         Cards(dbHandler, accelerometers = listOf("x", "y", "z"))
@@ -27,7 +28,9 @@ class MainActivityViewModel constructor(val dbHandler: DbHandler) : ViewModel() 
             }
             val accelerometers = dbHandler.accelerometers.collectAsState(initial = 0)
             val xyz by remember { accelerometers }
-            Text(xyz.toString())
+            Row() {
+                donut.PieChart(modifier = Modifier, progressV = xyz , color = Color(0xFFbf95d4))
+            }
         }
     }
 
@@ -56,8 +59,8 @@ class MainActivityViewModel constructor(val dbHandler: DbHandler) : ViewModel() 
                 }
                 OutlinedButton(
                     onClick = {
-                         val num: Int? = validateNumber(accelerometerValue)
-                        if (num !=null) dbHandler.write(path, num)
+                        val num: Int? = validateNumber(accelerometerValue)
+                        if (num != null) dbHandler.write(path, num)
                     }
                 ) {
                     Text("Send")
@@ -75,13 +78,5 @@ class MainActivityViewModel constructor(val dbHandler: DbHandler) : ViewModel() 
                 Log.w("Message", "Invalid Number")
             }
         return num
-    }
-
-    //    @Preview(showBackground = true, widthDp = 320)
-    @Composable
-    fun DefaultPreview() {
-        Telematics_engineTheme {
-            Cards(dbHandler = dbHandler, accelerometers = listOf("x", "y", "z"))
-        }
     }
 }

@@ -25,135 +25,137 @@ import kotlin.math.atan2
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-@Composable
-fun PieChart(
-    modifier: Modifier,
-    progressV: Int,
-    color: Color,
-    isDonut: Boolean = true,
+class Donut() {
+    @Composable
+    fun PieChart(
+        modifier: Modifier,
+        progressV: Int,
+        color: Color,
+        isDonut: Boolean = true,
 //    percentColor: Color = Color.White
-    maxProgress: Float = 1000f
-) {
-    val progress:Float=progressV.toFloat()/maxProgress
+        maxProgress: Float = 1000f
+    ) {
+        val progress: Float = progressV.toFloat() / maxProgress
 
-    var activePie by remember {
-        mutableStateOf(-1)
-    }
-
-    var startAngle = 270f
-
-    BoxWithConstraints(modifier = modifier) {
-
-        val sideSize = min(constraints.maxWidth, constraints.maxHeight)
-        val padding = (sideSize * if (isDonut) 30 else 20) / 100f
-
-
-        val pathPortion = remember {
-            Animatable(initialValue = 0f)
-        }
-        LaunchedEffect(key1 = true) {
-            pathPortion.animateTo(
-                1f, animationSpec = tween(1000)
-            )
+        var activePie by remember {
+            mutableStateOf(-1)
         }
 
-        val size = Size(sideSize.toFloat() - padding, sideSize.toFloat() - padding)
+        var startAngle = 270f
 
-        Canvas(
-            modifier = Modifier
-                .width(sideSize.dp)
-                .height(sideSize.dp)
-                .pointerInput(true) {
+        BoxWithConstraints(modifier = modifier) {
 
-                    if (!isDonut)
-                        return@pointerInput
-
-                    detectTapGestures {
-                        val clickedAngle = convertTouchEventPointToAngle(
-                            sideSize.toFloat(),
-                            sideSize.toFloat(),
-                            it.x,
-                            it.y
-                        )
-                        return@detectTapGestures
-                    }
-                }
-        ) {
-
-            drawPie(
-                color = color,
-                startAngle = startAngle,
-                arcProgress = progress * 360f,
-                size = size,
-                padding = padding,
-                isDonut = isDonut,
-                isActive = true
-            )
+            val sideSize = min(constraints.maxWidth, constraints.maxHeight)
+            val padding = (sideSize * if (isDonut) 30 else 20) / 100f
 
 
-            drawContext.canvas.nativeCanvas.apply {
-                val fontSize = 60.toDp().toPx()
-                drawText(
-                    "${progress * 100f.roundToInt()}%",
-                    (sideSize / 2) + fontSize / 4, (sideSize / 2) + fontSize / 3,
-                    Paint().apply {
-//                            color = percentColor
-                        textSize = fontSize
-                        textAlign = Paint.Align.CENTER
-                    }
+            val pathPortion = remember {
+                Animatable(initialValue = 0f)
+            }
+            LaunchedEffect(key1 = true) {
+                pathPortion.animateTo(
+                    1f, animationSpec = tween(1000)
                 )
             }
+
+            val size = Size(sideSize.toFloat() - padding, sideSize.toFloat() - padding)
+
+            Canvas(
+                modifier = Modifier
+                    .width(sideSize.dp)
+                    .height(sideSize.dp)
+                    .pointerInput(true) {
+
+                        if (!isDonut)
+                            return@pointerInput
+
+                        detectTapGestures {
+                            val clickedAngle = convertTouchEventPointToAngle(
+                                sideSize.toFloat(),
+                                sideSize.toFloat(),
+                                it.x,
+                                it.y
+                            )
+                            return@detectTapGestures
+                        }
+                    }
+            ) {
+
+                drawPie(
+                    color = color,
+                    startAngle = startAngle,
+                    arcProgress = progress * 360f,
+                    size = size,
+                    padding = padding,
+                    isDonut = isDonut,
+                    isActive = true
+                )
+
+
+                drawContext.canvas.nativeCanvas.apply {
+                    val fontSize = 60.toDp().toPx()
+                    drawText(
+                        "${progress * 100f.roundToInt()}%",
+                        (sideSize / 2) + fontSize / 4, (sideSize / 2) + fontSize / 3,
+                        Paint().apply {
+//                            color = percentColor
+                            textSize = fontSize
+                            textAlign = Paint.Align.CENTER
+                        }
+                    )
+                }
+            }
+        }
+
+    }
+
+    private fun DrawScope.drawPie(
+        color: Color,
+        startAngle: Float,
+        arcProgress: Float,
+        size: Size,
+        padding: Float,
+        isDonut: Boolean = false,
+        isActive: Boolean = false
+    ): Path {
+
+        return Path().apply {
+            drawArc(
+                color = color,
+                startAngle = startAngle,
+                sweepAngle = arcProgress,
+                useCenter = !isDonut,
+                size = size,
+                style = if (isDonut) Stroke(
+                    width = if (isActive) 120f else 100f,
+                ) else Fill,
+
+                topLeft = Offset(padding / 2, padding / 2)
+            )
         }
     }
 
-}
+    private fun convertTouchEventPointToAngle(
+        width: Float,
+        height: Float,
+        xPos: Float,
+        yPos: Float
+    ): Double {
+        var x = xPos - (width * 0.5f)
+        val y = yPos - (height * 0.5f)
 
-private fun DrawScope.drawPie(
-    color: Color,
-    startAngle: Float,
-    arcProgress: Float,
-    size: Size,
-    padding: Float,
-    isDonut: Boolean = false,
-    isActive: Boolean = false
-): Path {
+        var angle = Math.toDegrees(atan2(y.toDouble(), x.toDouble()) + Math.PI / 2)
+        angle = if (angle < 0) angle + 360 else angle
+        return angle
+    }
 
-    return Path().apply {
-        drawArc(
-            color = color,
-            startAngle = startAngle,
-            sweepAngle = arcProgress,
-            useCenter = !isDonut,
-            size = size,
-            style = if (isDonut) Stroke(
-                width = if (isActive) 120f else 100f,
-            ) else Fill,
-
-            topLeft = Offset(padding / 2, padding / 2)
+    @Preview
+    @Composable
+    fun ChartPreview() {
+        PieChart(
+            modifier = Modifier,
+            progressV = 500,
+            color = Color(0xFFbf95d4)
         )
     }
-}
-
-private fun convertTouchEventPointToAngle(
-    width: Float,
-    height: Float,
-    xPos: Float,
-    yPos: Float
-): Double {
-    var x = xPos - (width * 0.5f)
-    val y = yPos - (height * 0.5f)
-
-    var angle = Math.toDegrees(atan2(y.toDouble(), x.toDouble()) + Math.PI / 2)
-    angle = if (angle < 0) angle + 360 else angle
-    return angle
-}
-
-@Preview
-@Composable
-fun ChartPreview() {
-    PieChart(
-        modifier = Modifier,
-        progressV = 500,
-        color = Color(0xFFbf95d4)
-    )
 }
