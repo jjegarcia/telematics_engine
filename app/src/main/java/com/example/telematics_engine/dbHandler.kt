@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class DbHandler() {
     val myRef: DatabaseReference by lazy { FirebaseDatabase.getInstance().getReference("test") }
 
-    private val _accelerometers: MutableStateFlow<Accelerometers> = MutableStateFlow(Accelerometers(0, 0, 0))
+    private val _accelerometers: MutableStateFlow<Accelerometers> = MutableStateFlow(Accelerometers())
     val accelerometers: Flow<Accelerometers> get() = _accelerometers
 
 
@@ -27,7 +27,11 @@ class DbHandler() {
         })
     }
 
-    fun write(path: String, value: Int) {
-        if (value in 0..1000) myRef.child(path).setValue(value)
+    fun writeAccelerometers(value: Accelerometers) {
+        myRef.setValue(value)
+    }
+
+    fun writeAccelerometer(path: String, value: Float) {
+        if (value in 0f..10f) myRef.child(path).setValue(value)
     }
 }

@@ -26,7 +26,7 @@ class MainActivityViewModel constructor(val dbHandler: DbHandler) : ViewModel() 
             for (name in accelerometers) {
                 Card(dbHandler, path = name)
             }
-            val accelerometers = dbHandler.accelerometers.collectAsState(initial = Accelerometers(0,0,0))
+            val accelerometers = dbHandler.accelerometers.collectAsState(initial = Accelerometers())
             val xyz by remember { accelerometers }
             Row() {
                 donut.PieChart(modifier = Modifier, progressV = xyz.x , color = Color(0xFFbf95d4))
@@ -59,8 +59,8 @@ class MainActivityViewModel constructor(val dbHandler: DbHandler) : ViewModel() 
                 }
                 OutlinedButton(
                     onClick = {
-                        val num: Int? = validateNumber(accelerometerValue)
-                        if (num != null) dbHandler.write(path, num)
+                        val num: Float = validateNumber(accelerometerValue)
+                        if (num != null) dbHandler.writeAccelerometer(path, num)
                     }
                 ) {
                     Text("Send")
@@ -69,11 +69,11 @@ class MainActivityViewModel constructor(val dbHandler: DbHandler) : ViewModel() 
         }
     }
 
-    private fun validateNumber(accelerometerValue: String): Int? {
-        var num: Int? = null
+    private fun validateNumber(accelerometerValue: String): Float {
+        var num = 0f
         if (!accelerometerValue.isBlank())
             try {
-                num = accelerometerValue.toInt()
+                num = accelerometerValue.toFloat()
             } catch (e: NumberFormatException) {
                 Log.w("Message", "Invalid Number")
             }

@@ -29,13 +29,13 @@ class Donut() {
     @Composable
     fun PieChart(
         modifier: Modifier,
-        progressV: Int,
+        progressV: Float,
         color: Color,
         isDonut: Boolean = true,
 //    percentColor: Color = Color.White
-        maxProgress: Float = 1000f
+        maxProgress: Float = 10f
     ) {
-        val progress: Float = progressV.toFloat() / maxProgress
+        val progress: Float = progressV / maxProgress
 
         var activePie by remember {
             mutableStateOf(-1)
@@ -95,8 +95,8 @@ class Donut() {
                 drawContext.canvas.nativeCanvas.apply {
                     val fontSize = 60.toDp().toPx()
                     drawText(
-                        "${progress * 100f.roundToInt()}%",
-                        (sideSize / 2) + fontSize / 4, (sideSize / 2) + fontSize / 3,
+                        "${progressV.roundToInt()}",
+                        (sideSize / 2) + fontSize / 4, 50 + fontSize / 3,
                         Paint().apply {
 //                            color = percentColor
                             textSize = fontSize
@@ -154,7 +154,7 @@ class Donut() {
     fun ChartPreview() {
         PieChart(
             modifier = Modifier,
-            progressV = 500,
+            progressV = 500f,
             color = Color(0xFFbf95d4)
         )
     }
