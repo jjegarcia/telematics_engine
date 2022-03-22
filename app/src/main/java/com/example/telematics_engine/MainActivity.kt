@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.telematics_engine.ui.theme.Telematics_engineTheme
@@ -21,7 +22,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApp() {
                 DisplayScreenContent()
-//                Greeting(name = "Telematics")
             }
         }
     }
@@ -47,19 +47,26 @@ fun Greeting(name: String) {
 
 @Composable
 fun DisplayScreenContent(
-    names: List<String> = List(15){ itemNo ->
-        "Hello Android: $itemNo"}
-) {
-    var countState by remember {
-        mutableStateOf(0)
+    names: List<String> = List(5) { itemNo ->
+        "Hello Android: $itemNo"
     }
+) {
 
-    Column(modifier = Modifier.fillMaxHeight()) {
-        NameList(names = names, modifier = Modifier.weight(1f))
-        Counter(count = countState, updateCount = { newCount ->
-            countState = newCount
-        })
-        if (countState > 5) Text(text = "Too many clicks")
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "R.string.accept_cookies") }
+            )
+        }
+    ) {
+        Column(modifier = Modifier.fillMaxHeight()) {
+
+            NameList(names = names, modifier = Modifier.weight(1f))
+
+            Button(onClick = { /*TODO*/ }) {
+                Text("hey")
+            }
+        }
     }
 }
 
@@ -68,7 +75,6 @@ private fun NameList(names: List<String>, modifier: Modifier) {
     Column(modifier = modifier) {
         for (name in names) {
             Greeting(name = name)
-            Divider()
         }
     }
 }
@@ -84,7 +90,6 @@ fun Counter(count: Int, updateCount: (Int) -> Unit) {
 @Composable
 fun DefaultPreview() {
     MyApp {
-//        DisplayScreenContent()
-        Greeting(name = "Telematics")
+        DisplayScreenContent()
     }
 }
