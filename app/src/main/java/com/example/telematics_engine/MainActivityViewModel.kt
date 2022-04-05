@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 
@@ -78,5 +79,11 @@ class MainActivityViewModel constructor(val dbHandler: DbHandler) : ViewModel() 
                 Log.w("Message", "Invalid Number")
             }
         return num
+    }
+
+    @Preview
+    @Composable
+    fun ChartPreview(){
+
     }
 }
