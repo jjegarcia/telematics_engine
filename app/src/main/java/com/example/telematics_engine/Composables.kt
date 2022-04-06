@@ -11,14 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.telematics_engine.Accelerometers
-import com.example.telematics_engine.Card
-import com.example.telematics_engine.DbHandler
-import com.example.telematics_engine.Donut
 
-class Cards() {
+class Composables() {
     @Composable
-    fun Cards(dbHandler: DbHandler, accelerometers: List<String>, card: Card, donut: Donut) {
+    fun Composables(dbHandler: DbHandler, accelerometers: List<String>, card: Card, donut: Donut) {
         Column(modifier = Modifier.padding(vertical = 4.dp)) {
             for (name in accelerometers) {
                 card.Card(dbHandler, path = name)
@@ -35,7 +31,7 @@ class Cards() {
     @Composable
     fun DefaultPreview() {
         val dbHandler = DbHandler()
-        Cards(
+        Composables(
             dbHandler = dbHandler,
             accelerometers = listOf("x", "y", "z"),
             card = Card(),

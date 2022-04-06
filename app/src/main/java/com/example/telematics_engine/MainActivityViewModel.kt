@@ -2,12 +2,12 @@ package com.example.telematics_engine
 
 import androidx.compose.runtime.Composable
 
-class MainActivityViewModel(val dbHandler: DbHandler, val cards: Cards = Cards()) {
+class MainActivityViewModel(val dbHandler: DbHandler, val composables: Composables = Composables()) {
     val donut = Donut()
 
     @Composable
     fun MyApp() {
-        cards.Cards(
+        composables.Composables(
             dbHandler = dbHandler,
             accelerometers = listOf("x", "y", "z"),
             card = Card(),
